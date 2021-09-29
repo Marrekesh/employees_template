@@ -83,23 +83,34 @@ export default class App extends Component {
 	}
 
 	takeFilter = (filter) => {
-		
+		this.setState({filter})
+	}
+
+	tabFilter = (items, filter) => {
+		switch(filter) {
+			case 'rise':
+				return items.filter(item => item.rise)
+			case 'moreThan1000':
+				return items.filter(item => item.salary > 1000)
+			default:
+				return items
+		}
 	}
 
 	render() {
-		const {data, term} = this.state
+		const {data, term, filter} = this.state
 
 		const employee = this.state.data.length;
 		const increased = this.state.data.filter(item => item.increase).length
 
-		const visibleItem = this.searchItem(data, term)
+		const visibleItem = this.tabFilter(this.searchItem(data, term), filter)
 		return (
 			<div className="app">
 				<AppInfo employee={employee} increased={increased}/>
 
 				<div className="search-panel">
 					<SearchPanel newTerm={this.newTerm}/>
-					<AppFilter/>
+					<AppFilter filter={filter} takeFilter={this.takeFilter}/>
 				</div>
 				
 				<EmployeesList 
